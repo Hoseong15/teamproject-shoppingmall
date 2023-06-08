@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate, Await } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,13 +9,14 @@ import { faSliders } from "@fortawesome/free-solid-svg-icons";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
-
 import "./Product.css";
 import "./slider.css";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { useSpeechRecognition, useSpeechSynthesis } from "react-speech-kit";
+import { useSpeechSynthesis } from "react-speech-kit";
+
+
 
 const Product = ({ texts }) => {
   const navigate = useNavigate();
@@ -163,12 +164,18 @@ const Product = ({ texts }) => {
 
   ///////////// 버튼 클릭했을 때 텍스트 변경 ////////
   const [sizeText, setSizeText] = useState([
+    { text: "-20%" },
+    { text: "-15%" },
+    { text: "-10%"  },
+    { text: "-5%"  },
     { text: "기본" },
     { text: "5%" },
     { text: "10%" },
+    { text: "15%"  },
+    { text: "20%"  },
   ]);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(4);
 
   const handlePreviousClick = () => {
     setCurrentIndex((prevIndex) => {
@@ -178,6 +185,7 @@ const Product = ({ texts }) => {
       }
       return newIndex;
     });
+    setZoomSize(zoomSize - 0.05); // 5% 감소
   };
 
   const handleNextClick = () => {
@@ -188,6 +196,7 @@ const Product = ({ texts }) => {
       }
       return newIndex;
     });
+    setZoomSize(zoomSize + 0.05); // 5% 증가
   };
 
   ///////////////클릭 했을 때 텍스트 색상 변경 ////////////
@@ -270,9 +279,37 @@ const Product = ({ texts }) => {
     setToggleModal(!toggleModal);
   };
 
+  /////// 화면이 5% 증가하게 만드는 부분 ////
+  const [zoomSize, setZoomSize] = useState(1);
+
+  // 확대되고 축소되는 부분을 글자 크기조절 하는 함수에다가 넣어서 주석 처리해놓음(165번줄) //
+  // const handleZoomIn = () => {
+  //   setZoomLevel(zoomLevel + 0.05); // 5% 증가
+  // };
+
+  // const handleZoomOut = () => {
+  //   setZoomLevel(zoomLevel - 0.05); // 5% 감소
+  // };
+
+  // 뇌전증 안전모드 클릭했을 때 filter: saturate(0%); 실행되는 코드 //////
+  const [changeFilter, setChangeFilter] = useState(false);
+
+  const handleFilter = () => {
+    setChangeFilter(!changeFilter)
+  }
+
+  // 클릭했을 때 필터 숨기기 -> 표시 이런식으로 변경되게 하고 //
+  const [filterText, setFilterText] = useState('필터 숨기기')
+  const handleFilterText = () => {
+    setFilterText(filterText => filterText === '필터 숨기기' ? '필터 표시' : '필터 숨기기')
+    setHidden(!hidden)
+  }
+  const [hidden, setHidden] = useState('true');
+  
+
   return (
     <div>
-      <div className="banner-wrapper">
+      <div className="banner-wrapper" style={{ filter: changeFilter ? "saturate(0%)" : "none" }}>
         <Swiper
           slidesPerView={1}
           spaceBetween={1}
@@ -307,7 +344,7 @@ const Product = ({ texts }) => {
               alt="2022년 matter의 신상제품들을 코디한 5명의 모델이미지 입니다."
             />
           </SwiperSlide>
-          <SwiperSlide>
+          <SwiperSlide> 
             <img
               src="베너사진/MAIN-BANNER-04.png"
               alt="2022년 matter의 신상제품들을 코디한 6명의 모델이미지 입니다."
@@ -315,153 +352,155 @@ const Product = ({ texts }) => {
           </SwiperSlide>
         </Swiper>
       </div>
-
-      <div
-        className="product-wrapper"
-        style={{ color: currentColor, fontFamily: fontStyle }}
-      >
+      
+     
+    
+      <div className="product-wrapper {isZoomed ? 'zoomed-in' : ''}" style={{zoom: zoomSize, color: currentColor, fontFamily: fontStyle }}>
         <h1 className="product-title">Product</h1>
         <div className="product-wrapper-inner">
-          <div className="productName ">
-            <ul className="product-item-list">
-              <li>탑&티셔츠</li>
-              <li>후디</li>
-              <li>니트</li>
-              <li>재킷 & 베스트</li>
-              <li>팬츠</li>
-              <li>쇼츠</li>
-              <li>스커트 & 드레스</li>
-              <li>악세사리</li>
-              <li>신발</li>
-            </ul>
-            <ul className="product-item-list">
-              <p className="list-item" onClick={handleClick1}>
-                성별
-                {isDown ? (
-                  <FontAwesomeIcon className="faChevron" icon={faChevronDown} />
-                ) : (
-                  <FontAwesomeIcon className="faChevron" icon={faChevronUp} />
-                )}
-              </p>
-              {isPeople && (
-                <>
-                  {people.map((people, index) => (
-                    <li key={index} onClick={() => peopleClick(index)}>
-                      <input
-                        type="checkbox"
-                        checked={people.checked}
-                        readOnly
-                      />
-                      <span className="list-detail">{people.name}</span>
-                    </li>
-                  ))}
-                </>
-              )}
-            </ul>
-            <ul className="product-item-list">
-              <p className="list-item" onClick={handleClick}>
-                가격대
-                {showDown ? (
-                  <FontAwesomeIcon
-                    className="faChevron"
-                    icon={faChevronDown}
-                    alt="클릭하면 가격대의 상세내용이 펼쳐집니다."
-                  />
-                ) : (
-                  <FontAwesomeIcon
-                    className="faChevron"
-                    icon={faChevronUp}
-                    alt="클릭하면 가격대의 상세내용이 접어집니다."
-                  />
-                )}
-              </p>
-              {isShown && (
-                <>
-                  {prices.map((price, index) => (
-                    <li key={index} onClick={() => handlePriceClick(index)}>
-                      <input type="checkbox" checked={price.checked} readOnly />
-                      <span className="list-detail">{price.label}</span>
-                    </li>
-                  ))}
-                </>
-              )}
-            </ul>
-            <ul className="product-item-list">
-              <p className="list-item" onClick={handleClick2}>
-                사이즈
-                {sizeDown ? (
-                  <FontAwesomeIcon className="faChevron" icon={faChevronDown} />
-                ) : (
-                  <FontAwesomeIcon className="faChevron" icon={faChevronUp} />
-                )}
-              </p>
-              {isSize && (
-                <>
-                  {size.map((size, index) => (
-                    <li key={index} onClick={() => sizeClick(index)}>
-                      <input
-                        type="checkbox"
-                        checked={size.checked}
-                        readOnly
-                        alt="체크하면 해당 제품의 사이즈가 나타납니다."
-                      />
-                      <span className="list-detail">{size.size}</span>
-                    </li>
-                  ))}
-                </>
-              )}
-            </ul>
-
-            <div className="voice">
-              <ul>
-                <button
-                  onClick={() => speak({ text: text, rate, pitch })}
-                  alt="음성인식을 조절할 수 있습니다."
-                >
-                  <span>음성 인식</span>
-                  <FontAwesomeIcon
-                    icon={faMicrophone}
-                    alt="클릭하면 음성이 출력됩니다."
-                  />
-                </button>
-                <p className="voice-guide">클릭하시면 음성이 출력됩니다</p>
+          {hidden && (
+            <div className="productName " style={{ color: currentColor, border: borderStyle }}>
+              <ul className="product-item-list">
+                <li>탑&티셔츠</li>
+                <li>후디</li>
+                <li>니트</li>
+                <li>재킷 & 베스트</li>
+                <li>팬츠</li>
+                <li>쇼츠</li>
+                <li>스커트 & 드레스</li>
+                <li>악세사리</li>
+                <li>신발</li>
               </ul>
-              <ul>
-                <label htmlFor="pitch">
-                  <span>Rate:</span> <span>{rate}</span>
-                </label>
 
-                <input
-                  type="range"
-                  min="0.5"
-                  max="2"
-                  step="0.1"
-                  value={rate}
-                  onChange={(e) => {
-                    setRate(e.target.value);
-                  }}
-                />
+              <ul className="product-item-list">
+                <p className="list-item" onClick={handleClick1}>
+                  성별
+                  {isDown ? (
+                    <FontAwesomeIcon className="faChevron" icon={faChevronDown} />
+                  ) : (
+                    <FontAwesomeIcon className="faChevron" icon={faChevronUp} />
+                  )}
+                </p>
+                {isPeople && (
+                  <>
+                    {people.map((people, index) => (
+                      <li key={index} onClick={() => peopleClick(index)}>
+                        <input
+                          type="checkbox"
+                          checked={people.checked}
+                          readOnly
+                        />
+                        <span className="list-detail">{people.name}</span>
+                      </li>
+                    ))}
+                  </>
+                )}
               </ul>
-              <ul>
-                <label htmlFor="pitch">
-                  <span>Pitch:</span> <span>{pitch}</span>
-                </label>
-
-                <input
-                  type="range"
-                  min="0"
-                  max="2"
-                  step="0.1"
-                  value={pitch}
-                  id="pitch"
-                  onChange={(event) => {
-                    setPitch(event.target.value);
-                  }}
-                />
+              <ul className="product-item-list">
+                <p className="list-item" onClick={handleClick}>
+                  가격대
+                  {showDown ? (
+                    <FontAwesomeIcon
+                      className="faChevron"
+                      icon={faChevronDown}
+                      alt="클릭하면 가격대의 상세내용이 펼쳐집니다."
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      className="faChevron"
+                      icon={faChevronUp}
+                      alt="클릭하면 가격대의 상세내용이 접어집니다."
+                    />
+                  )}
+                </p>
+                {isShown && (
+                  <>
+                    {prices.map((price, index) => (
+                      <li key={index} onClick={() => handlePriceClick(index)}>
+                        <input type="checkbox" checked={price.checked} readOnly />
+                        <span className="list-detail">{price.label}</span>
+                      </li>
+                    ))}
+                  </>
+                )}
               </ul>
-            </div>
-          </div>
+              <ul className="product-item-list">
+                <p className="list-item" onClick={handleClick2}>
+                  사이즈
+                  {sizeDown ? (
+                    <FontAwesomeIcon className="faChevron" icon={faChevronDown} />
+                  ) : (
+                    <FontAwesomeIcon className="faChevron" icon={faChevronUp} />
+                  )}
+                </p>
+                {isSize && (
+                  <>
+                    {size.map((size, index) => (
+                      <li key={index} onClick={() => sizeClick(index)}>
+                        <input
+                          type="checkbox"
+                          checked={size.checked}
+                          readOnly
+                          alt="체크하면 해당 제품의 사이즈가 나타납니다."
+                        />
+                        <span className="list-detail">{size.size}</span>
+                      </li>
+                    ))}
+                  </>
+                )}
+              </ul>
 
+           <div className="voice">
+             <ul>
+               <button
+                 onClick={() => speak({ text: text, rate, pitch })}
+                 alt="음성인식을 조절할 수 있습니다."
+               >
+                 <span>음성 인식</span>
+                 <FontAwesomeIcon
+                   icon={faMicrophone}
+                   alt="클릭하면 음성이 출력됩니다."
+                 />
+               </button>
+               <p className="voice-guide">클릭하시면  음성이 출력됩니다</p>
+             </ul>
+             <ul>
+               <label htmlFor="pitch">
+                 <span>Rate:</span> <span>{rate}</span>
+               </label>
+
+               <input
+                 type="range"
+                 min="0.5"
+                 max="2"
+                 step="0.1"
+                 value={rate}
+                 onChange={(e) => {
+                   setRate(e.target.value);
+                 }}
+               />
+             </ul>
+             <ul>
+               <label htmlFor="pitch">
+                 <span>Pitch:</span> <span>{pitch}</span>
+               </label>
+
+               <input
+                 type="range"
+                 min="0"
+                 max="2"
+                 step="0.1"
+                 value={pitch}
+                 id="pitch"
+                 onChange={(event) => {
+                   setPitch(event.target.value);
+                 }}
+               />
+             </ul>
+           </div>
+         </div>
+        )}
+         
           <div className="product-main-inner">
             <div className="filter">
               <ul className="list">
@@ -471,12 +510,14 @@ const Product = ({ texts }) => {
                     backgroundColor: currentBgColor,
                     border: borderStyle,
                   }}
+                  onClick={handleFilterText}
                 >
-                  필터 숨기기
+                 {filterText}
                   <FontAwesomeIcon
                     className="faSliders"
                     icon={faSliders}
                     alt="클릭하면 왼쪽에 비치된 필터들이 사라집니다."
+                    
                   />
                 </p>
 
@@ -526,12 +567,12 @@ const Product = ({ texts }) => {
             </div>
             <div className="product-list">
               {texts.map((test, index) => (
-                <div className="product-preview" key={index}>
+                <div className="product-preview"  key={index}>
                   <div onClick={() => click(index)}>
-                    <img
+                    <img  style={{ filter: changeFilter ? "saturate(0%)" : "none" }}
                       src={test.img}
                       alt="각 제품의 해당상품 이미지 입니다."
-                    />
+                    / >
                   </div>
                   <h2
                     className="best-text"
@@ -592,8 +633,9 @@ const Product = ({ texts }) => {
                           id="switch"
                           className="hide"
                           alt="클릭하시면 뇌전증 안전모드가 실행됩니다."
+                          onClick={handleFilter}
                         />
-                        <label for="switch" className="detail-input"></label>
+                        <label htmlFor="switch" className="detail-input"></label>
                       </span>
                       <span>뇌전증 안전모드</span>
                     </div>
@@ -607,7 +649,7 @@ const Product = ({ texts }) => {
                         />
                         <label
                           onClick={handleBorder}
-                          for="switch1"
+                          htmlFor="switch1"
                           className="detail-input"
                         ></label>
                       </span>
@@ -623,7 +665,7 @@ const Product = ({ texts }) => {
                         />
                         <label
                           onClick={handleFontChange}
-                          for="switch2"
+                          htmlFor="switch2"
                           className="detail-input"
                         ></label>
                       </span>
@@ -651,7 +693,7 @@ const Product = ({ texts }) => {
                   </div>
 
                   <div className="text-wrap">
-                    <span>글자 크기조절</span>
+                    <span>컨텐츠 크기 조정</span>
                     <div className="text-size">
                       <button
                         className="min-button"

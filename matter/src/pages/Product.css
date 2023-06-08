@@ -30,6 +30,8 @@
 .product-wrapper {
   width: calc(100%);
   margin-top: 150px;
+  
+
 }
 
 .product-wrapper-inner {
@@ -250,7 +252,7 @@ input[type="range"] {
 }
 
 .modalImg {
-  width: calc(100% - 90%);
+  width: calc(100% - 95%);
   float: right;
   position: relative;
 }
@@ -413,4 +415,10 @@ input:checked + .detail-input:after {
 
 .bgcColor-changeWrap {
   margin-top: 40px;
+}
+
+
+.zoomed-in{
+  transform: scale(1.5);
+  transition: transform 0.3s ease;
 }

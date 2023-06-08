@@ -3,6 +3,9 @@ import { useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import "./Detail.css";
+import { useSpeechSynthesis } from "react-speech-kit";
+import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
+
 
 const Detail = ({ tests, id }) => {
   const [selectImg, setSelectImg] = useState("");
@@ -23,6 +26,18 @@ const Detail = ({ tests, id }) => {
         setFetchData(response);
       });
   }, []);
+
+  const {voice} = useSpeechSynthesis();
+  const voiceText = useState([
+    "cm",
+    "총장",
+    "어깨너비",
+    "가슴단면",
+    "소매길이",
+  ]);
+
+  const [pitch, setPitch] = useState(1);
+  const [rate, setRate] = useState(1);
 
   if (test) {
     return (
@@ -200,18 +215,6 @@ const Detail = ({ tests, id }) => {
           </div>
         </div>
 
-        {/* <div className="detail-wrapper">
-            <h3>{test.detailtext}</h3>
-            <div className="detail-img-wrapper">
-              <img src={test.detailimg} alt="" />
-              <img src={test.detailimg1} alt="" />
-              <ibmg src={test.detailimg2} alt="" />
-              <img src={test.detailimg3} alt="" />
-            </div>
-            <h3>{test.detailtext}</h3>
-            <h3>{test.detailtext}</h3>
-            <h3>{test.detailtext}</h3>
-          </div> */}
       </div>
     );
   }
