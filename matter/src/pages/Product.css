@@ -302,6 +302,7 @@ input[type="range"] {
   justify-content: left;
   align-items: center;
   margin-bottom: 30px;
+  /* font-family: Cachildren; */
 }
 
 .swich-item span {

@@ -263,14 +263,7 @@ const Product = ({ texts }) => {
 
   const borderStyle = borderVisible ? "1px solid blue" : "none";
 
-  ////// 클릭했을 때 font-family 바뀌게 /////////
-  const [fontFamily, setFontFamily] = useState("Pretendard-Thin");
 
-  const handleFontChange = () => {
-    setFontFamily(!fontFamily);
-  };
-
-  const fontStyle = fontFamily ? "BareunBatang" : "none";
 
   // 친화적 모드 토글 ////
   const [toggleModal, setToggleModal] = useState(false);
@@ -355,7 +348,7 @@ const Product = ({ texts }) => {
       
      
     
-      <div className="product-wrapper {isZoomed ? 'zoomed-in' : ''}" style={{zoom: zoomSize, color: currentColor, fontFamily: fontStyle }}>
+      <div className="product-wrapper {isZoomed ? 'zoomed-in' : ''}" style={{zoom: zoomSize, color: currentColor}}>
         <h1 className="product-title">Product</h1>
         <div className="product-wrapper-inner">
           {hidden && (
@@ -655,41 +648,6 @@ const Product = ({ texts }) => {
                       </span>
                       <span>인지 장애 집중모드</span>
                     </div>
-                    <div className="swich-item">
-                      <span>
-                        <input
-                          type="checkbox"
-                          id="switch2"
-                          className="hide"
-                          alt="클릭하시면 난독증 친화적 모드가 실행됩니다."
-                        />
-                        <label
-                          onClick={handleFontChange}
-                          htmlFor="switch2"
-                          className="detail-input"
-                        ></label>
-                      </span>
-                      <span>난독증 친화적 모드</span>
-                    </div>
-                  </div>
-
-                  <div className="light-wrap">
-                    <span>밝기 조절</span>
-                    <p>
-                      <button>
-                        <img
-                          src="/메인사진/lightDark.png"
-                          alt="이 이미지는 밝기 낮추기 버튼입니다."
-                        />
-                      </button>
-                      <span>0</span>
-                      <button>
-                        <img
-                          src="/메인사진/light.png"
-                          alt="이 이미지는 밝기 높이기 버튼입니다."
-                        />
-                      </button>
-                    </p>
                   </div>
 
                   <div className="text-wrap">
